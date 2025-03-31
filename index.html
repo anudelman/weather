@@ -1,62 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
     <nav>
-        <img src="https://placehold.co/200x50" id="logo" />
+      <img src="./assets/Logo.png" id="logo" />
+      <input
+        type="text"
+        id="searchbox"
+        placeholder="Search for a city..."
+        autocomplete="off"
+      />
+      <div id="autocomplete-results"></div>
+      <button id="my-location" class="text-button"><i class="ph ph-navigation-arrow"></i> Use my location</button>
+      <button id="map-view" class="text-button"><i class="ph ph-map-trifold"></i> Map view</button>
     </nav>
     <section id="city-temp">
-        <h1></h1>
-        <h2></h2>
+      <h1></h1>
+      <h2></h2>
     </section>
-    <section id="weekly-forecast">
-        <div class="daily-forecast">
-            <div class="subtitle">
-                <img class="weather-icon" src="https://placehold.co/24" alt="cloud icon"/>
-                <h4 class="day">Monday</h4>
-            </div>
-            
-            <h3 class="daily high">
-                71°
-            </h3>
-            <h3 class="daily low">
-                51°
-            </h3>
-            <div class="chance-of-rain">
-                <img src="https://placehold.co/18" alt="umbrella icon">
-                <h4>10%</h4>
-            </div>
-            <section id="hourly-forecast">
-                <div>
-                    <img src="https://placehold.co/24" alt="clock icon">
-                    <h5>Hourly Forecast</h5>
-                </div>
-                <div class="bar">
-                  <div>
-                    <img src="https://placehold.co/18" alt="umbrella icon">
-                    <h6 class="chance-of-rain">90%</h6>
-                  </div>
-                  <h6>66°</h6>
-                </div>
-                <h5>4 PM</h5>
-            </section>
-            <section id="weather-variables">
-                <div class="card">
-                    <div class="subtitle">
-                        <img src="https://placehold.co/24" alt="air icon">
-                    </div>
-                </div>
-            </section>
-
-        </div>
+    <section id="five-day-forecast" class="forecast"></section>
+    <section id="weather-cards" class="weather-cards">
+      <div class="card" id="card-air-quality">
+        <h3>Air Quality</h3>
+        <p class="card-value" data-key="aqi-value">--</p>
+        <p class="card-subtext" data-key="aqi-subtext">Updated live</p>
+      </div>
+      <div class="card" id="card-precipitation">
+        <h3>Precipitation</h3>
+        <p class="card-value" data-key="precip-value">--</p>
+        <p class="card-subtext" data-key="precip-subtext">Updated live</p>
+      </div>
+      <div class="card" id="card-uv-index">
+        <h3>UV Index</h3>
+        <p class="card-value" data-key="uv-value">--</p>
+        <p class="card-subtext" data-key="uv-subtext">Updated live</p>
+      </div>
+      <div class="card" id="card-wind">
+        <h3>Wind</h3>
+        <p class="card-value" data-key="wind-value">--</p>
+        <p class="card-subtext" data-key="wind-subtext">Updated live</p>
+      </div>
+      <div class="card" id="card-humidity">
+        <h3>Humidity</h3>
+        <p class="card-value" data-key="humidity-value">--</p>
+        <p class="card-subtext" data-key="humidity-subtext">Updated live</p>
+      </div>
+      <div class="card" id="card-visibility">
+        <h3>Visibility</h3>
+        <p class="card-value" data-key="visibility-value">--</p>
+        <p class="card-subtext" data-key="visibility-subtext">Updated live</p>
+      </div>
+      <div class="card" id="card-pressure">
+        <h3>Pressure</h3>
+        <p class="card-value" data-key="pressure-value">--</p>
+        <p class="card-subtext" data-key="pressure-subtext">Updated live</p>
+      </div>
+      <div class="card" id="card-sunrise">
+        <h3>Sunrise</h3>
+        <p class="card-value" data-key="sunrise-value">--</p>
+        <p class="card-subtext" data-key="sunrise-subtext">Updated live</p>
+      </div>
     </section>
-
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <section id="hourly-forecast" class="hourly-forecast"></section>
+    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="app.js"></script>
-</body>
+  </body>
 </html>
