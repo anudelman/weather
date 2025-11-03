@@ -90,36 +90,93 @@ section#city-temp{
   color: white;
 }
 
+.forecast-section {
+  margin: 24px 0;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1E293B;
+  margin-bottom: 16px;
+}
+
 .forecast {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 12px;
-  padding: 16px 0;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .forecast {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .forecast {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }
 
 .forecast-day {
   background: white;
   border-radius: 12px;
-  padding: 12px;
+  padding: 16px;
   text-align: center;
-  flex: 1;
   color: #334155;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.forecast-day:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.forecast-day .day-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.forecast-day .day {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.forecast-day .date {
+  font-size: 13px;
+  color: #64748B;
 }
 
 .forecast-day img {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto;
 }
 
 .forecast-day .temps {
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   margin: 4px 0;
+  color: #0F172A;
 }
 
 .forecast-day .pop {
-  font-size: 14px;
+  font-size: 13px;
   color: #64748B;
+}
+
+.forecast-day .description {
+  font-size: 12px;
+  color: #64748B;
+  text-transform: capitalize;
+  margin-top: 4px;
 }
 
 /* Hourly Forecast Section */
