@@ -1,411 +1,395 @@
-# Apple Weather Desktop - Implementation Roadmap
+# Apple Weather (Web) - Implementation Roadmap
 
-**Last Updated:** 2025-11-03
+**Last Updated:** 2025-11-03 (Revised for Web Platform)
 **Status:** Phase 0 (Foundation & Planning)
-**Target Platform:** macOS 15 Sequoia+
+**Target Platform:** Modern Web Browsers (Chrome 90+, Safari 14+, Firefox 88+, Edge 90+)
 
 ---
 
 ## Overview
 
-This roadmap outlines the transformation of the current web-based weather prototype into a **native macOS application** that fully realizes the vision described in [AGENTS.md](./AGENTS.md). The implementation follows a phased approach to deliver incremental value while building toward the complete product vision.
+This roadmap outlines the enhancement of the current web-based weather prototype into a **premium, macOS-inspired web application** that fully realizes the vision described in [AGENTS.md](./AGENTS.md). The implementation follows a phased approach to incrementally improve design, features, and performance while maintaining the web platform.
+
+### Strategic Direction
+- **Maintain web platform** for maximum accessibility and cross-platform support
+- **Adopt macOS Human Interface Guidelines** as design language foundation
+- **Deliver progressive enhancements** through phased releases
+- **Target 3-4 month timeline** for full PRD implementation
 
 ---
 
 ## Roadmap Phases
 
 ```
-Phase 0: Foundation (NOW)
+Phase 0: Foundation & Audit (Weeks 1-2)
     ↓
-Phase 1: Native MVP (Q1 2026)
+Phase 1: macOS Design System (Weeks 3-6)
     ↓
-Phase 2: macOS Integration (Q2 2026)
+Phase 2: PWA & Performance (Weeks 7-9)
     ↓
-Phase 3: Ecosystem Features (Q3 2026)
+Phase 3: Advanced Features (Weeks 10-12)
     ↓
-Phase 4: Polish & Scale (Q4 2026)
+Phase 4: Polish & Launch (Weeks 13-16)
 ```
 
 ---
 
-## Phase 0: Foundation & Planning
-**Timeline:** November 2025
+## Phase 0: Foundation & Audit
+**Timeline:** Weeks 1-2 (November 2025)
 **Status:** ✅ In Progress
-**Goal:** Establish project foundations and technical infrastructure
+**Goal:** Establish baseline metrics and prepare for enhancement
 
 ### Objectives
 - [x] Document product requirements (AGENTS.md)
+- [x] Update PRD for web-focused approach
 - [x] Analyze current implementation vs. target vision
 - [x] Create gap analysis and roadmap
-- [ ] Set up macOS development environment
-- [ ] Obtain Apple Developer account + WeatherKit access
-- [ ] Create Xcode project scaffold
-- [ ] Set up CI/CD pipeline (Xcode Cloud or GitHub Actions)
+- [ ] Conduct design audit against macOS HIG
+- [ ] Run Lighthouse performance audit
+- [ ] Run accessibility audit (axe-core, WAVE)
+- [ ] Set up modern build tooling (Vite + TypeScript)
+- [ ] Evaluate framework choice (React vs Vue vs Vanilla)
 
 ### Deliverables
-- ✅ AGENTS.md - Product requirements document
+- ✅ AGENTS.md - Product requirements document (web-focused)
 - ✅ GAP_ANALYSIS.md - Current vs. target comparison
 - ✅ ROADMAP.md - This document
 - ✅ Updated README.md
-- 🔄 Xcode project structure
-- 🔄 WeatherKit API test implementation
-- 🔄 Basic SwiftUI scaffolding
+- 🔄 Design audit report with HIG compliance checklist
+- 🔄 Performance baseline (Lighthouse scores)
+- 🔄 Accessibility audit report
+- 🔄 Vite project setup or migration plan
 
 ### Success Metrics
-- All documentation complete
-- Development environment functional
-- Successfully fetch weather data from WeatherKit API
-- Basic app launches on macOS
+- Design audit completed with actionable recommendations
+- Baseline Lighthouse scores documented
+- Accessibility violations catalogued
+- Build tooling decision finalized
 
 ### Agent Assignments
 - **📘 DocsAgent:** Complete all documentation (DONE)
-- **🧠 LogicAgent:** Set up Xcode project and WeatherKit integration
-- **🧱 ReleaseAgent:** Configure CI/CD pipeline
+- **🧩 DesignAgent:** Conduct design audit vs macOS HIG
+- **🧪 QABot:** Run Lighthouse + accessibility audits
+- **🧠 LogicAgent:** Evaluate build tooling options
 
 ---
 
-## Phase 1: Native MVP (P0 Features)
-**Timeline:** Q1 2026 (January - March)
-**Goal:** Achieve feature parity with current web prototype in native macOS
+## Phase 1: macOS-Inspired Design System
+**Timeline:** Weeks 3-6 (December 2025)
+**Goal:** Implement macOS HIG visual language and extend core features
 
-### Month 1: Core Data Layer
-**Agent:** 📡 DataAgent, 🧠 LogicAgent
+### Week 3: Typography & Color System
+**Agent:** 🧩 DesignAgent
 
 #### Tasks
-- [ ] Implement WeatherKit service layer
-- [ ] Create data models (CurrentWeather, HourlyForecast, DailyForecast)
-- [ ] Build caching system (UserDefaults + FileManager)
-- [ ] Implement offline mode with 12h data retention
-- [ ] Add error handling and retry logic
-- [ ] Create unit tests for data layer (≥80% coverage)
+- [ ] Implement SF Pro font with system fallbacks
+  ```css
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  ```
+- [ ] Create CSS custom properties for macOS color system
+- [ ] Implement light mode color palette (#FFFFFF, #F5F5F7, #1D1D1F, #007AFF)
+- [ ] Implement dark mode with `prefers-color-scheme: dark`
+- [ ] Dark mode colors (#000000, #1C1C1E, #2C2C2E, #0A84FF)
+- [ ] Test color contrast ratios (WCAG AA: 4.5:1 text, 3:1 UI)
+- [ ] Create color documentation and design tokens
 
 #### Deliverables
-- `WeatherService.swift` - WeatherKit API wrapper
-- `WeatherCache.swift` - Local caching implementation
-- `Models/` - Swift data models
-- Unit tests
+- `styles/tokens.css` - Design tokens (colors, spacing, typography)
+- Dark mode toggle (respects system preference)
+- Typography scale (display, headline, body, caption)
 
-### Month 2: UI Foundation
+### Week 4: Layout & Card System
 **Agent:** 🧩 DesignAgent, 🧠 LogicAgent
 
 #### Tasks
-- [ ] Design SwiftUI component architecture
-- [ ] Implement main window layout (matching HIG)
-- [ ] Create CurrentConditionsView
-- [ ] Create DailyForecastView (5-day)
-- [ ] Create HourlyForecastView (24-hour)
-- [ ] Create WeatherDetailsCardView (8 cards)
-- [ ] Implement dark mode support
-- [ ] Add system accent color theming
+- [ ] Refine card layouts with macOS-style elevation
+- [ ] Implement subtle shadows (`box-shadow: 0 1px 3px rgba(0,0,0,0.1)`)
+- [ ] Add rounded corners (12-20px border-radius)
+- [ ] Implement translucency effects (`backdrop-filter: blur(20px)`)
+- [ ] Create responsive grid system (mobile-first)
+- [ ] Refactor navigation (clean, minimal header)
+- [ ] Add generous whitespace (24-48px sections)
+- [ ] Ensure touch targets ≥44px (mobile accessibility)
 
 #### Deliverables
-- `Views/` - SwiftUI view components
-- `ContentView.swift` - Main app layout
-- Figma design files (if needed)
-- UI component tests
+- Updated card components with macOS aesthetics
+- Responsive layout system
+- Component library (if using React/Vue)
 
-### Month 3: Location & Search
+### Week 5: Animations & Micro-interactions
+**Agent:** 🎨 AnimationAgent
+
+#### Tasks
+- [ ] Define animation timing (300-500ms cubic-bezier easing)
+- [ ] Implement smooth page transitions
+- [ ] Add hover states with subtle scale/opacity changes
+- [ ] Create loading skeleton screens
+- [ ] Add button press animations (active states)
+- [ ] Implement smooth scrolling
+- [ ] Add `prefers-reduced-motion` support
+- [ ] Ensure 60 FPS performance (use CSS transforms)
+
+#### Deliverables
+- Animation utility classes or mixins
+- Skeleton loading components
+- Reduced motion alternative styles
+
+### Week 6: Extended Forecast & Geolocation
+**Agent:** 📡 DataAgent, 🧠 LogicAgent
+
+#### Tasks
+- [ ] Extend forecast from 5-day to 10-day
+- [ ] Implement browser Geolocation API
+- [ ] Add location permission flow
+- [ ] Handle geolocation errors gracefully
+- [ ] Update "Use my location" button to be functional
+- [ ] Add loading states for API calls
+- [ ] Implement error boundaries
+- [ ] Optimize API calls (debounce, caching)
+
+#### Deliverables
+- 10-day forecast view
+- Functional geolocation feature
+- Error handling UI
+
+### Phase 1 Success Criteria
+- ✅ macOS HIG visual language implemented (SF Pro, colors, shadows)
+- ✅ Dark mode fully functional
+- ✅ 10-day forecast working
+- ✅ Geolocation implemented
+- ✅ Animations smooth at 60 FPS
+- ✅ Design system documented in Storybook (optional)
+
+---
+
+## Phase 2: PWA & Performance Optimization
+**Timeline:** Weeks 7-9 (January 2026)
+**Goal:** Offline support, PWA installation, and performance optimization
+
+### Week 7: Service Workers & Offline Support
+**Agent:** 🧠 LogicAgent
+
+#### Tasks
+- [ ] Create Service Worker for caching strategy
+- [ ] Implement Cache API for offline weather data
+- [ ] Add offline detection and banner
+- [ ] Cache API responses (12h retention)
+- [ ] Implement background sync (if supported)
+- [ ] Add IndexedDB for larger datasets
+- [ ] Test offline functionality
+- [ ] Handle cache invalidation
+
+#### Deliverables
+- `service-worker.js` - Caching strategy
+- Offline mode UI
+- IndexedDB integration
+
+### Week 8: PWA Manifest & Installation
+**Agent:** 🧠 LogicAgent, 🧩 DesignAgent
+
+#### Tasks
+- [ ] Create `manifest.json` with app metadata
+- [ ] Design app icons (192x192, 512x512, maskable)
+- [ ] Add install prompt for desktop users
+- [ ] Test PWA installation on Chrome, Safari, Edge
+- [ ] Add "Add to Home Screen" prompt (mobile)
+- [ ] Configure display mode (standalone)
+- [ ] Set theme color and background color
+- [ ] Test iOS home screen icon
+
+#### Deliverables
+- PWA manifest
+- App icons in multiple sizes
+- Install prompt UI
+- iOS splash screens
+
+### Week 9: Performance Optimization
+**Agent:** 🧱 ReleaseAgent, 🧪 QABot
+
+#### Tasks
+- [ ] Run Lighthouse audit (target: ≥90)
+- [ ] Implement code splitting (lazy load routes)
+- [ ] Optimize images (WebP, lazy loading)
+- [ ] Minify CSS and JavaScript
+- [ ] Implement tree shaking
+- [ ] Add resource hints (preload, prefetch)
+- [ ] Optimize fonts (font-display: swap)
+- [ ] Reduce bundle size (<200KB gzipped)
+- [ ] Profile and fix performance bottlenecks
+- [ ] Test on low-end devices
+
+#### Deliverables
+- Lighthouse score ≥90
+- Bundle size report
+- Performance budget documentation
+
+### Phase 2 Success Criteria
+- ✅ PWA installable on desktop and mobile
+- ✅ Offline mode functional
+- ✅ Lighthouse Performance ≥ 90
+- ✅ Bundle size < 200KB (gzipped)
+- ✅ Works offline for 12h after last update
+
+---
+
+## Phase 3: Advanced Features & Interactions
+**Timeline:** Weeks 10-12 (February 2026)
+**Goal:** Premium features and delightful interactions
+
+### Week 10: Dynamic Weather Backgrounds
+**Agent:** 🎨 AnimationAgent
+
+#### Tasks
+- [ ] Design weather scene animations (clear, cloudy, rainy, snowy, stormy)
+- [ ] Implement CSS gradient backgrounds
+- [ ] Add Canvas particle effects for rain/snow
+- [ ] Create smooth scene transitions
+- [ ] Add time-of-day coloring (sunrise, day, sunset, night)
+- [ ] Ensure performance on low-end devices
+- [ ] Add user preference: enable/disable animations
+- [ ] Test across browsers (Safari, Chrome, Firefox)
+
+#### Deliverables
+- 5+ animated weather scenes
+- Canvas-based particle system
+- Animation toggle in settings
+
+### Week 11: Radar Map Integration
+**Agent:** 📡 DataAgent, 🧠 LogicAgent
+
+#### Tasks
+- [ ] Evaluate map providers (Mapbox, Leaflet, Google Maps)
+- [ ] Integrate map library
+- [ ] Fetch radar/precipitation data from OpenWeather
+- [ ] Create radar overlay layer
+- [ ] Add map controls (zoom, pan)
+- [ ] Implement time slider for radar animation
+- [ ] Add location marker
+- [ ] Optimize map performance
+- [ ] Handle API cost considerations
+
+#### Deliverables
+- Interactive radar map view
+- Precipitation overlay
+- Radar animation timeline
+
+### Week 12: Saved Locations & Weather Alerts
 **Agent:** 🧠 LogicAgent, 📡 DataAgent
 
 #### Tasks
-- [ ] Integrate CoreLocation for "current location"
-- [ ] Implement MapKit search for city lookup
+- [ ] Implement saved locations feature
+- [ ] Use localStorage for local storage
+- [ ] Add/remove/reorder locations
 - [ ] Create location picker UI
-- [ ] Add location permission handling
-- [ ] Implement saved locations (UserDefaults)
-- [ ] Add autocomplete search results
-- [ ] Create LocationManager service
+- [ ] Fetch severe weather alerts from API
+- [ ] Implement browser notifications (with permission)
+- [ ] Create alerts UI (banner, modal)
+- [ ] Add alert severity indicators
+- [ ] Test notification delivery
+- [ ] Handle notification permissions gracefully
 
 #### Deliverables
-- `LocationManager.swift` - Location services wrapper
-- `LocationSearchView.swift` - Search UI
-- Location permission prompts
-- Privacy policy update (Info.plist)
+- Saved locations feature
+- Severe weather alerts
+- Browser notifications integration
 
-### Month 3 (cont.): Testing & Polish
+### Phase 3 Success Criteria
+- ✅ Dynamic backgrounds animate smoothly
+- ✅ Radar map loads within 3 seconds
+- ✅ Saved locations persist across sessions
+- ✅ Severe weather alerts delivered promptly
+- ✅ All P1 features implemented
+
+---
+
+## Phase 4: Polish, Testing & Launch
+**Timeline:** Weeks 13-16 (March 2026)
+**Goal:** Production readiness and public launch
+
+### Week 13: Comprehensive Testing
 **Agent:** 🧪 QABot
 
 #### Tasks
+- [ ] Write unit tests (Jest) - ≥80% coverage
 - [ ] Write integration tests
-- [ ] Perform manual QA testing
-- [ ] Fix critical bugs (P0/P1)
-- [ ] Optimize launch time (target: ≤1.2s)
-- [ ] Measure memory footprint (target: <150MB)
-- [ ] Profile CPU usage (target: <2% idle)
-- [ ] Accessibility audit (VoiceOver, keyboard nav)
+- [ ] E2E testing (Playwright or Cypress)
+- [ ] Cross-browser testing (Chrome, Safari, Firefox, Edge)
+- [ ] Mobile testing (iOS Safari, Chrome Mobile)
+- [ ] Test offline scenarios
+- [ ] Load testing (rapid city switching)
+- [ ] Fix all critical bugs (P0/P1)
 
 #### Deliverables
-- QA test plan
-- Bug reports + fixes
-- Performance baseline metrics
-- TestFlight beta build
+- Test suite with ≥80% coverage
+- E2E test scenarios
+- Bug fix PRs
 
-### Phase 1 Success Criteria
-- ✅ All P0 features implemented
-- ✅ Launch time ≤ 1.2 seconds
-- ✅ Memory usage < 150MB
-- ✅ No P0 bugs
-- ✅ VoiceOver compatible
-- ✅ TestFlight distributed to internal team
-
----
-
-## Phase 2: macOS Integration (P1 Features)
-**Timeline:** Q2 2026 (April - June)
-**Goal:** Add native macOS features and ecosystem integrations
-
-### Month 4: Widgets
-**Agent:** 🧩 DesignAgent, 🧠 LogicAgent
+### Week 14: Accessibility & Mobile Optimization
+**Agent:** 🧪 QABot, 🧩 DesignAgent
 
 #### Tasks
-- [ ] Design widget layouts (Small, Medium, Large)
-- [ ] Implement WidgetKit integration
-- [ ] Create Current Conditions widget
-- [ ] Create Hourly Forecast widget
-- [ ] Create 5-Day Forecast widget
-- [ ] Add widget configuration (choose location)
-- [ ] Implement widget refresh timeline
-- [ ] Test widget performance (battery impact)
+- [ ] Run axe-core accessibility audit
+- [ ] Test with screen readers (NVDA, VoiceOver)
+- [ ] Ensure keyboard navigation works
+- [ ] Verify WCAG 2.2 AA compliance
+- [ ] Optimize for mobile devices
+- [ ] Test touch interactions
+- [ ] Ensure responsive layout works (320px - 2560px)
+- [ ] Fix accessibility violations
 
 #### Deliverables
-- `Widgets/` - WidgetKit bundle
-- Widget previews in Xcode
-- Widget configuration UI
+- Accessibility audit report
+- WCAG compliance certification
+- Mobile-optimized layouts
 
-### Month 5: Menu Bar & 10-Day Forecast
-**Agent:** 🧠 LogicAgent, 📡 DataAgent
+### Week 15: Deployment & Monitoring
+**Agent:** 🧱 ReleaseAgent
 
 #### Tasks
-- [ ] Implement menu bar extra (NSStatusItem)
-- [ ] Create compact menu bar summary view
-- [ ] Add menu bar click-through to main app
-- [ ] Update preferences (show/hide menu bar)
-- [ ] Extend forecast to 10 days
-- [ ] Add forecast trend visualizations
-- [ ] Implement background refresh (every 15 min)
+- [ ] Set up production hosting (Vercel/Netlify)
+- [ ] Configure custom domain
+- [ ] Set up SSL/TLS
+- [ ] Configure CDN
+- [ ] Set up error tracking (Sentry or similar)
+- [ ] Add analytics (Plausible/Fathom - privacy-first)
+- [ ] Create staging environment
+- [ ] Set up CI/CD pipeline (GitHub Actions)
+- [ ] Deploy to production
 
 #### Deliverables
-- `MenuBarController.swift` - Menu bar integration
-- Menu bar popover UI
-- 10-day forecast view
-- Background refresh scheduler
+- Production deployment
+- Monitoring dashboards
+- CI/CD pipeline
 
-### Month 6: Dynamic Backgrounds & Animations
-**Agent:** 🧩 DesignAgent, 🧠 LogicAgent
+### Week 16: Documentation & Launch
+**Agent:** 📘 DocsAgent, 🧱 ReleaseAgent
 
 #### Tasks
-- [ ] Design animated weather scenes (clear, rain, snow, cloudy, storm)
-- [ ] Implement SceneKit rendering engine
-- [ ] Create fallback static images (low-power mode)
-- [ ] Add GPU performance monitoring
-- [ ] Implement adaptive frame rate
-- [ ] Create scene transition animations
-- [ ] Add user preference: animations on/off
-- [ ] Test on M1/M2/M3/Intel Macs
+- [ ] Write user guide / help documentation
+- [ ] Create privacy policy
+- [ ] Write API documentation (if applicable)
+- [ ] Create component documentation (Storybook)
+- [ ] Write launch announcement
+- [ ] Prepare press kit / screenshots
+- [ ] Submit to web directories (Product Hunt, etc.)
+- [ ] Monitor launch metrics
+- [ ] Gather user feedback
+- [ ] Create support channel
 
 #### Deliverables
-- `Scenes/` - SceneKit weather scenes
-- `AnimationEngine.swift` - Scene management
-- Performance profiles
-- Accessibility: reduced motion support
-
-### Phase 2 Success Criteria
-- ✅ All P1 features implemented
-- ✅ Widgets functional in Notification Center
-- ✅ Menu bar integration seamless
-- ✅ 10-day forecast accurate (≥99% vs source)
-- ✅ Animations smooth (≥30 FPS on supported hardware)
-- ✅ Battery impact minimal (< 5% additional drain)
-- ✅ Public beta on TestFlight (500+ users)
-
----
-
-## Phase 3: Ecosystem Features (P1/P2)
-**Timeline:** Q3 2026 (July - September)
-**Goal:** Deep Apple ecosystem integrations
-
-### Month 7: iCloud Sync & Siri
-**Agent:** 🗣️ VoiceAgent, 🧠 LogicAgent
-
-#### Tasks
-- [ ] Implement iCloud Key-Value Store sync
-- [ ] Sync saved locations across devices
-- [ ] Sync user preferences (units, theme, etc.)
-- [ ] Create SiriKit intents (GetWeather, GetForecast)
-- [ ] Add Siri Shortcuts support
-- [ ] Create suggested Shortcuts (morning weather, etc.)
-- [ ] Test Siri on macOS, iPhone, iPad, Watch
-
-#### Deliverables
-- `CloudSyncManager.swift` - iCloud integration
-- `Intents/` - SiriKit intent definitions
-- Shortcuts gallery
-
-### Month 8: Radar & Maps
-**Agent:** 📡 DataAgent, 🧠 LogicAgent
-
-#### Tasks
-- [ ] Integrate MapKit for radar view
-- [ ] Fetch WeatherKit radar/precipitation data
-- [ ] Create interactive radar overlay
-- [ ] Add radar animation (time slider)
-- [ ] Implement zoom/pan controls
-- [ ] Add location markers on map
-- [ ] Create radar refresh timer (every 5 min)
-- [ ] Optimize map rendering performance
-
-#### Deliverables
-- `RadarView.swift` - MapKit + radar overlay
-- Radar animation controls
-- Location pins on map
-
-### Month 9: Severe Weather Alerts
-**Agent:** 📡 DataAgent, 🧠 LogicAgent
-
-#### Tasks
-- [ ] Fetch WeatherKit severe weather alerts
-- [ ] Implement notification system (UNUserNotificationCenter)
-- [ ] Create alert notification UI
-- [ ] Add alert severity levels (watch, warning, advisory)
-- [ ] Implement alert filtering (by location)
-- [ ] Add alert history view
-- [ ] Create alert preferences (which types to show)
-- [ ] Test with NOAA test alerts
-
-#### Deliverables
-- `AlertManager.swift` - Alert handling
-- Notification templates
-- Alert history UI
-
-### Phase 3 Success Criteria
-- ✅ iCloud sync working across ≥2 devices
-- ✅ Siri responds to weather queries accurately
-- ✅ Radar loads within 3 seconds
-- ✅ Severe weather alerts delivered within 60 seconds
-- ✅ Notification permissions properly requested
-- ✅ App Store submission prep complete
-
----
-
-## Phase 4: Polish & Scale (P2/P3)
-**Timeline:** Q4 2026 (October - December)
-**Goal:** Production readiness and advanced features
-
-### Month 10: Spotlight & Historical Data
-**Agent:** 🧠 LogicAgent, 📡 DataAgent
-
-#### Tasks
-- [ ] Implement Core Spotlight integration
-- [ ] Index saved locations in Spotlight
-- [ ] Add searchable weather data (temp, conditions)
-- [ ] Create historical data storage (SQLite or CoreData)
-- [ ] Fetch historical weather (WeatherKit or third-party)
-- [ ] Create historical data visualization (charts)
-- [ ] Add date picker for historical lookup
-
-#### Deliverables
-- Spotlight indexing
-- Historical data database
-- `HistoricalWeatherView.swift`
-
-### Month 11: Performance Optimization
-**Agent:** 🧪 QABot, 🧱 ReleaseAgent
-
-#### Tasks
-- [ ] Comprehensive performance profiling (Instruments)
-- [ ] Optimize memory usage (Leaks, Allocations)
-- [ ] Reduce app launch time (if > target)
-- [ ] Optimize network calls (caching, batching)
-- [ ] Test on macOS 15 + macOS 16 beta
-- [ ] Fix all crashes (target: 0.01% crash rate)
-- [ ] Perform load testing (rapid city switching)
-
-#### Deliverables
-- Performance report
-- Optimization PRs
-- Crash-free app
-
-### Month 12: App Store Launch
-**Agent:** 🧱 ReleaseAgent, 📘 DocsAgent
-
-#### Tasks
-- [ ] Finalize app metadata (name, description, keywords)
-- [ ] Create App Store screenshots (all sizes)
-- [ ] Record app preview video
-- [ ] Write App Store description
-- [ ] Prepare privacy policy
-- [ ] Submit for App Review
-- [ ] Address App Review feedback (if any)
-- [ ] Set release date
-- [ ] Launch marketing campaign
-
-#### Deliverables
-- App Store listing (live)
-- Press kit
+- User documentation
+- Privacy policy
 - Launch announcement
-- User guide / support docs
+- Support infrastructure
 
 ### Phase 4 Success Criteria
-- ✅ App Store approved
-- ✅ App Store rating ≥ 4.5 ⭐️ (first 100 reviews)
-- ✅ Crash rate < 0.01%
-- ✅ 10K+ downloads (first month)
-- ✅ All P0/P1 features shipped
-- ✅ Documentation complete (DocC, support site)
-
----
-
-## Future Enhancements (Post-1.0)
-
-### Phase 5: Multi-Platform (2027)
-- [ ] iPad optimization (Stage Manager, Split View)
-- [ ] Apple Watch companion app
-- [ ] iPhone app (if separate from iOS Weather)
-- [ ] Apple Vision Pro spatial UI
-
-### P3 Features (Future)
-- [ ] Customizable widgets (user-defined layouts)
-- [ ] Weather alerts automation (Shortcuts integration)
-- [ ] Weather data export (CSV, JSON)
-- [ ] Third-party integrations (Calendar, Reminders)
-- [ ] Weather photography integration (iCloud Photos)
-- [ ] Social features (share forecasts)
-
-### Continuous Improvements
-- Monthly performance reviews
-- Bi-weekly feature prioritization
-- Quarterly user feedback sessions
-- Annual major version releases
-
----
-
-## Risk Mitigation Plan
-
-| Risk | Mitigation | Owner |
-|------|------------|-------|
-| WeatherKit API changes | Monitor Apple docs, maintain API abstraction layer | 📡 DataAgent |
-| Performance regressions | Automated performance tests in CI | 🧪 QABot |
-| Scope creep | Strict phase gates, defer P3 to post-launch | 🧱 ReleaseAgent |
-| Team capacity | Hire contractors, prioritize P0/P1 only | ProductAgent |
-| App Review rejection | Early TestFlight review, follow HIG strictly | 🧱 ReleaseAgent |
-| Competitor launches | Focus on Apple ecosystem differentiation | 🧩 DesignAgent |
-
----
-
-## Dependencies
-
-### External
-- Apple Developer Program membership ($99/year)
-- WeatherKit API access
-- Xcode 16+ (macOS 15 SDK)
-- macOS 15 Sequoia for testing
-- TestFlight for beta distribution
-
-### Internal
-- Design assets (icons, screenshots)
-- Marketing materials
-- Support documentation
-- Privacy policy / legal review
+- ✅ Test coverage ≥ 80%
+- ✅ WCAG 2.2 AA compliant
+- ✅ Deployed to production
+- ✅ Zero P0 bugs
+- ✅ Documentation complete
+- ✅ Monitoring active
+- ✅ Public launch announced
 
 ---
 
@@ -413,27 +397,89 @@ Phase 4: Polish & Scale (Q4 2026)
 
 | Metric | Phase 1 Target | Phase 2 Target | Phase 3 Target | Phase 4 Target |
 |--------|---------------|---------------|---------------|---------------|
-| **Launch Time** | ≤ 1.2s | ≤ 1.0s | ≤ 0.8s | ≤ 0.8s |
-| **Memory Usage** | < 150MB | < 120MB | < 120MB | < 100MB |
-| **CPU (Idle)** | < 2% | < 2% | < 1.5% | < 1.5% |
-| **Crash Rate** | < 0.1% | < 0.05% | < 0.01% | < 0.01% |
-| **API Accuracy** | ≥ 99% | ≥ 99.5% | ≥ 99.5% | ≥ 99.5% |
-| **App Store Rating** | 4.0+ | 4.5+ | 4.7+ | 4.8+ |
-| **User Count** | 100 (beta) | 500 (beta) | 1K (beta) | 10K+ (public) |
+| **Lighthouse Performance** | ≥ 80 | ≥ 90 | ≥ 90 | ≥ 90 |
+| **Lighthouse Accessibility** | ≥ 90 | ≥ 95 | 100 | 100 |
+| **First Contentful Paint** | ≤ 2.0s | ≤ 1.5s | ≤ 1.5s | ≤ 1.5s |
+| **Largest Contentful Paint** | ≤ 3.0s | ≤ 2.5s | ≤ 2.5s | ≤ 2.5s |
+| **Bundle Size (gzipped)** | < 300KB | < 200KB | < 200KB | < 200KB |
+| **Test Coverage** | N/A | N/A | ≥ 60% | ≥ 80% |
+| **PWA Score** | N/A | ≥ 80 | ≥ 90 | ≥ 90 |
 
 ---
 
 ## Agent Capacity Planning
 
-| Phase | 🧩 Design | 📡 Data | 🧠 Logic | 🧪 QA | 🗣️ Voice | 📘 Docs | 🧱 Release |
-|-------|-----------|---------|----------|--------|----------|---------|-----------|
-| **Phase 0** | 20% | 10% | 30% | 0% | 0% | 100% | 10% |
-| **Phase 1** | 40% | 80% | 100% | 60% | 0% | 20% | 20% |
-| **Phase 2** | 80% | 60% | 100% | 80% | 0% | 30% | 40% |
-| **Phase 3** | 40% | 100% | 100% | 80% | 100% | 40% | 60% |
-| **Phase 4** | 30% | 40% | 60% | 100% | 20% | 80% | 100% |
+| Phase | 🧩 Design | 📡 Data | 🧠 Logic | 🧪 QA | 🎨 Animation | 📘 Docs | 🧱 Release |
+|-------|-----------|---------|----------|--------|-------------|---------|-----------|
+| **Phase 0** | 40% | 10% | 30% | 30% | 0% | 100% | 10% |
+| **Phase 1** | 80% | 40% | 60% | 20% | 60% | 20% | 0% |
+| **Phase 2** | 20% | 20% | 80% | 60% | 0% | 10% | 80% |
+| **Phase 3** | 40% | 80% | 60% | 40% | 100% | 10% | 20% |
+| **Phase 4** | 30% | 10% | 20% | 100% | 20% | 80% | 100% |
 
 _Note: Percentages represent relative time allocation, not FTE count._
+
+---
+
+## Risk Mitigation Plan
+
+| Risk | Mitigation | Owner |
+|------|------------|-------|
+| OpenWeather API rate limits | Implement aggressive caching, monitor usage, upgrade tier if needed | 📡 DataAgent |
+| Performance regressions | Automated Lighthouse tests in CI, performance budgets | 🧪 QABot |
+| Browser compatibility | Test on all major browsers, use polyfills, progressive enhancement | 🧠 LogicAgent |
+| Scope creep | Strict phase gates, defer P3 features to post-launch | 🧱 ReleaseAgent |
+| PWA adoption low | Clear install prompts, educate users on offline benefits | 🧩 DesignAgent |
+| Animation performance | Profile early, use GPU-accelerated transforms, optional animations | 🎨 AnimationAgent |
+
+---
+
+## Technology Stack
+
+### Frontend
+- **Framework:** React 18+ or Vue 3 (TBD in Phase 0)
+- **Build Tool:** Vite 5+
+- **Language:** TypeScript (optional but recommended)
+- **Styling:** Tailwind CSS + CSS Modules
+- **State:** Context API / Zustand / Redux Toolkit
+- **HTTP Client:** Axios
+
+### PWA & Performance
+- **Service Workers:** Workbox
+- **Caching:** Cache API + IndexedDB
+- **Build Optimization:** Vite plugins (compression, image optimization)
+
+### Maps & Visualization
+- **Maps:** Mapbox GL JS or Leaflet
+- **Charts:** Chart.js or Recharts
+- **Animations:** Framer Motion / GSAP / CSS
+
+### Testing & Quality
+- **Unit Tests:** Jest + React Testing Library
+- **E2E Tests:** Playwright or Cypress
+- **Accessibility:** axe-core, WAVE
+- **Performance:** Lighthouse CI
+
+### Deployment & Monitoring
+- **Hosting:** Vercel or Netlify
+- **CI/CD:** GitHub Actions
+- **Analytics:** Plausible (privacy-first)
+- **Error Tracking:** Sentry (optional)
+
+---
+
+## Dependencies
+
+### External
+- OpenWeather API (free tier or paid)
+- Mapbox/Leaflet for radar maps (free tier available)
+- Hosting platform (Vercel/Netlify - free tier available)
+- Optional: Analytics, error tracking
+
+### Internal
+- Design assets (app icons, screenshots)
+- Privacy policy and legal review
+- User documentation
 
 ---
 
@@ -443,9 +489,10 @@ _Note: Percentages represent relative time allocation, not FTE count._
 - Agent sync meeting (30 min)
 - Blockers identified and resolved
 - Sprint planning (Mondays)
+- Demo completed work (Fridays)
 
 ### Bi-Weekly
-- Sprint demo to stakeholders
+- Sprint retrospective
 - Feature prioritization review
 - Risk assessment update
 
@@ -454,10 +501,28 @@ _Note: Percentages represent relative time allocation, not FTE count._
 - Metrics dashboard review
 - Roadmap adjustments (if needed)
 
-### Quarterly
-- Executive briefing
-- User feedback session
-- Budget review
+---
+
+## Post-Launch (Future Phases)
+
+### Phase 5: Analytics & Optimization (Weeks 17-20)
+- Gather user feedback
+- A/B testing for UX improvements
+- Performance optimization based on real-world data
+- Add requested features from user feedback
+
+### Phase 6: Advanced Features (Q2 2026+)
+- Historical weather data visualization
+- Data export (CSV/JSON)
+- Weather comparison (multi-city)
+- Customizable widgets
+- Share weather via link
+
+### Phase 7: Mobile App Wrappers (Q3 2026+)
+- Capacitor or React Native wrapper for app stores
+- iOS App Store submission
+- Android Play Store submission
+- Deep linking integration
 
 ---
 
@@ -465,26 +530,29 @@ _Note: Percentages represent relative time allocation, not FTE count._
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 0.1 | 2025-11-03 | Initial roadmap created |
-| 0.2 | TBD | Phase 1 kickoff updates |
+| 0.1 | 2025-11-03 | Initial roadmap created (native macOS) |
+| 0.2 | 2025-11-03 | Revised for web platform approach |
 | 1.0 | TBD | Phase 4 launch retrospective |
 
 ---
 
 ## Conclusion
 
-This roadmap provides a **structured, phased approach** to evolving the current web prototype into a **world-class native macOS weather application**. By following this plan and leveraging the multi-agent orchestration model defined in [AGENTS.md](./AGENTS.md), the team will deliver a product that:
+This roadmap provides a **structured, phased approach** to transforming the current web prototype into a **premium, macOS-inspired web application**. By following this plan and leveraging the multi-agent orchestration model defined in [AGENTS.md](./AGENTS.md), the team will deliver a product that:
 
-- Meets all P0 requirements by Q1 2026
-- Integrates deeply with the Apple ecosystem by Q3 2026
-- Launches on the Mac App Store by Q4 2026
-- Achieves the success metrics defined in the PRD
+- Implements macOS HIG design principles in web form by end of Phase 1
+- Achieves PWA offline functionality by end of Phase 2
+- Delivers all P1 features by end of Phase 3
+- Launches to production by end of Phase 4 (Week 16)
+- Achieves success metrics defined in the PRD
+
+**Timeline:** 16 weeks (4 months) from Phase 0 to public launch
 
 **Next Steps:**
-1. Secure executive approval for Phase 0 budget
-2. Kick off Phase 0 tasks (development environment setup)
-3. Schedule weekly agent sync meetings
-4. Begin Xcode project scaffolding
+1. ✅ Complete Phase 0 documentation (DONE)
+2. Conduct design, performance, and accessibility audits (Week 1-2)
+3. Finalize framework and build tool decisions (Week 2)
+4. Begin Phase 1 implementation (Week 3)
 
 ---
 

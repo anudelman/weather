@@ -1,13 +1,13 @@
-# Apple Weather (Desktop)
+# Apple Weather (Web)
 
 ## Product Vision
-A beautifully designed, privacy-first **Apple Weather experience for macOS**, offering users hyperlocal, real-time, and forecasted weather insights—synchronized across their Apple ecosystem.
+A beautifully designed, privacy-first **Apple Weather experience** delivered through modern web technologies, offering users hyperlocal, real-time, and forecasted weather insights with a design language inspired by macOS aesthetics.
 
 ## Current Status
-**Implementation:** Web-based prototype (HTML/CSS/JavaScript)
-**Target Platform:** Native macOS app (SwiftUI + WeatherKit)
+**Implementation:** Web-based weather application (HTML/CSS/JavaScript)
+**Target Platform:** Modern web browsers (with macOS-inspired design)
 
-This repository currently contains a **functional web-based weather application** that serves as a prototype and proof-of-concept. The long-term vision is to evolve this into a **native macOS application** that deeply integrates with the Apple ecosystem.
+This repository contains a **functional web-based weather application** that will be enhanced with **macOS Human Interface Guidelines** design principles, delivering a premium, Apple-quality experience through web technologies.
 
 ### What's Working (Web Prototype)
 - ✅ Real-time weather conditions (OpenWeather API)
@@ -18,17 +18,18 @@ This repository currently contains a **functional web-based weather application*
 - ✅ Basic offline caching (localStorage)
 - ✅ Responsive design with Tailwind CSS
 
-### Future Vision (Native macOS)
+### Future Vision (Enhanced Web Experience)
 See **[AGENTS.md](./AGENTS.md)** for complete product requirements, including:
-- Native macOS app built with SwiftUI + WeatherKit
-- Menu bar integration with always-visible weather summary
+- macOS-inspired design system (SF Pro typography, translucency, shadows)
+- Dark mode support with system preference detection
+- Progressive Web App (PWA) with offline capability
 - Dynamic animated backgrounds that match current conditions
-- iCloud sync for saved locations across devices
-- Siri Shortcuts and Spotlight integration
-- Native widgets for Notification Center
-- Radar maps with live precipitation overlay
-- Severe weather alerts
+- Browser-based geolocation with "Use my location" feature
+- Interactive radar maps with precipitation overlay
+- Severe weather alerts with browser notifications
 - 10-day extended forecasts
+- Saved locations with localStorage/cloud sync
+- Premium micro-interactions and smooth animations
 
 ### Documentation
 - **[AGENTS.md](./AGENTS.md)** - Complete product requirements and agent orchestration model
@@ -70,14 +71,15 @@ const searchClient = algoliasearch("YOUR_ALGOLIA_APP_ID", "YOUR_ALGOLIA_API_KEY"
 - **Search:** Algolia Search
 - **HTTP Client:** Axios
 
-### Target (Native macOS)
-- **Language:** Swift 5.9+
-- **Framework:** SwiftUI, Combine
-- **Weather:** Apple WeatherKit API
-- **Maps:** MapKit
-- **Animations:** SceneKit, Metal
-- **Storage:** UserDefaults, iCloud Key-Value Store
-- **Platform:** macOS 15 Sequoia+
+### Target (Enhanced Web)
+- **Language:** JavaScript/TypeScript
+- **Framework:** React 18+ or Vue 3 (with Vite build tool)
+- **Weather:** OpenWeather API (current)
+- **Maps:** Mapbox GL JS or Leaflet
+- **Animations:** CSS animations, Canvas API, WebGL (optional)
+- **Storage:** localStorage, IndexedDB, Service Workers (PWA)
+- **Design System:** macOS HIG-inspired (SF Pro, system colors, translucency)
+- **Platform:** Modern browsers (Chrome 90+, Safari 14+, Firefox 88+, Edge 90+)
 
 ## Project Structure
 ```
@@ -99,30 +101,42 @@ weather/
 
 ## Roadmap
 
-### Phase 0: Foundation (Current)
+### Phase 0: Foundation & Audit (Weeks 1-2)
 - ✅ Web prototype with core weather features
-- ✅ Product requirements documentation
+- ✅ Product requirements documentation (web-focused)
 - ✅ Gap analysis completed
+- ⏳ Design, performance, and accessibility audits
 
-### Phase 1: MVP (Q1 2026)
-- Native macOS app scaffold
-- WeatherKit API integration
-- Current conditions + 5/10-day forecast
-- Basic widgets
+### Phase 1: macOS Design System (Weeks 3-6)
+- SF Pro typography and macOS color system
+- Dark mode implementation
+- Card layouts with translucency and shadows
+- Smooth animations and micro-interactions
+- 10-day forecast
+- Browser geolocation ("Use my location")
 
-### Phase 2: Native Enhancements (Q2 2026)
-- Menu bar mini view
-- Dynamic backgrounds
-- Siri integration
-- Radar maps
+### Phase 2: PWA & Performance (Weeks 7-9)
+- Service Workers for offline support
+- PWA manifest and install prompts
+- Performance optimization (Lighthouse ≥90)
+- Code splitting and lazy loading
 
-### Phase 3: Ecosystem Integration (Q3 2026)
-- iCloud sync
-- Severe weather alerts
-- Historical data
-- Watch app companion
+### Phase 3: Advanced Features (Weeks 10-12)
+- Dynamic weather backgrounds
+- Interactive radar maps
+- Severe weather alerts + notifications
+- Saved locations
+- Historical data (if API supports)
 
-See **[AGENTS.md](./AGENTS.md)** for detailed phased rollout timeline.
+### Phase 4: Polish & Launch (Weeks 13-16)
+- Comprehensive testing (unit, E2E, accessibility)
+- Cross-browser testing
+- Production deployment
+- Documentation and launch
+
+**Timeline:** 16 weeks (4 months) from start to public launch
+
+See **[ROADMAP.md](./ROADMAP.md)** for detailed week-by-week implementation plan.
 
 ## Contributing
 This project uses a multi-agent development model. See the [AGENTS.md](./AGENTS.md) file for agent responsibilities and contribution guidelines.
