@@ -28,12 +28,55 @@ nav{
   display: flex;
   gap: var(--spacing-sm);
   align-items: center;
+  flex-wrap: wrap;
 }
 
 img{
     max-width: 126px;
     max-height: 27px;
     margin-right: var(--spacing-xl);
+}
+
+.nav-buttons {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+/* Responsive Navigation - Mobile Stacked Layout */
+@media (max-width: 800px) {
+  body {
+    padding: var(--spacing-lg) var(--spacing-lg);
+  }
+
+  nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+
+  img {
+    margin-right: 0;
+    align-self: center;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  #searchbox {
+    width: 100%;
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+    width: 100%;
+  }
+
+  .nav-buttons .text-button {
+    flex: 1;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
 }
 
 #autocomplete-results{
