@@ -17,15 +17,38 @@ searchBox.addEventListener("input", async function () {
     return;
   }
 
-  try {
-    const { hits } = await index.search(query, { hitsPerPage: 5 });
+  // Check if the query is a zip code (5 digits)
+  const isZipCode = /^\d{5}$/.test(query);
 
-    resultsContainer.innerHTML = hits
-      .map(hit => `<div class="search-result" onclick="fetchWeather('${hit.name}', ${hit._geoloc.lat}, ${hit._geoloc.lng})">${hit.name}, ${hit.state}</div>`)
-      .join("");
+  if (isZipCode) {
+    try {
+      // Use OpenWeather Geocoding API for zip codes
+      const response = await fetch(`https://api.openweathermap.org/geo/1.0/zip?zip=${query},US&appid=${openWeatherApiKey}`);
 
-  } catch (error) {
-    console.error("Algolia search error:", error);
+      if (!response.ok) {
+        resultsContainer.innerHTML = '<div class="search-result">No results found for this zip code</div>';
+        return;
+      }
+
+      const data = await response.json();
+      resultsContainer.innerHTML = `<div class="search-result" onclick="fetchWeather('${data.name}', ${data.lat}, ${data.lon})">${data.name}, ${query}</div>`;
+
+    } catch (error) {
+      console.error("Zip code search error:", error);
+      resultsContainer.innerHTML = '<div class="search-result">Error searching zip code</div>';
+    }
+  } else {
+    // Use Algolia for city name search
+    try {
+      const { hits } = await index.search(query, { hitsPerPage: 5 });
+
+      resultsContainer.innerHTML = hits
+        .map(hit => `<div class="search-result" onclick="fetchWeather('${hit.name}', ${hit._geoloc.lat}, ${hit._geoloc.lng})">${hit.name}, ${hit.state}</div>`)
+        .join("");
+
+    } catch (error) {
+      console.error("Algolia search error:", error);
+    }
   }
 });
 
