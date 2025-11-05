@@ -54,7 +54,7 @@ async function fetchWeather(city, latValue, lonValue) {
     searchBox.value = city; // Fill input with selected city
     
     // Fetch forecast data after updating current weather
-    getFiveDayForecast();
+    getTenDayForecast();
     getHourlyForecast();
     updateWeatherCards(lat, lon);
 
@@ -92,12 +92,52 @@ function getLatitudeAndLongitude() {
     });
 }
 
-function getFiveDayForecast() {
-  if (!lat && !lon) {
+function getTenDayForecast() {
+  if (!lat || !lon) {
     console.error('Latitude or Longitude is not available.');
     return;
   }
 
+  // Use One Call API to get daily forecast (up to 8 days on free tier)
+  axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=imperial&appid=${openWeatherApiKey}`)
+    .then((res) => {
+      const dailyData = res.data.daily;
+
+      // Take up to 10 days (API provides 7-8 days typically)
+      const forecastHTML = dailyData.slice(1, 11).map((day, index) => {
+        const date = new Date(day.dt * 1000);
+        const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
+        const monthDay = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        const icon = `https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`;
+        const tempMax = Math.round(day.temp.max);
+        const tempMin = Math.round(day.temp.min);
+        const pop = Math.round(day.pop * 100);
+
+        return `
+          <div class="forecast-day">
+            <div class="day-header">
+              <div class="day">${weekday}</div>
+              <div class="date">${monthDay}</div>
+            </div>
+            <img src="${icon}" alt="${day.weather[0].description}" />
+            <div class="temps">${tempMax}° / ${tempMin}°</div>
+            <div class="pop">💧 ${pop}%</div>
+            <div class="description">${day.weather[0].description}</div>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("ten-day-forecast").innerHTML = forecastHTML;
+    })
+    .catch((e) => {
+      console.error("10-day forecast error!", e);
+      // Fallback to 5-day forecast API if One Call fails
+      getFallbackFiveDayForecast();
+    });
+}
+
+// Fallback function using the standard 5-day forecast API
+function getFallbackFiveDayForecast() {
   axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${openWeatherApiKey}`)
     .then((res) => {
       const forecastData = res.data.list;
@@ -112,6 +152,7 @@ function getFiveDayForecast() {
       const forecastHTML = dailyForecasts.slice(0, 5).map(day => {
         const date = new Date(day.dt_txt);
         const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
+        const monthDay = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
         const icon = `https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`;
         const tempMax = Math.round(day.main.temp_max);
         const tempMin = Math.round(day.main.temp_min);
@@ -119,18 +160,22 @@ function getFiveDayForecast() {
 
         return `
           <div class="forecast-day">
-            <div class="day">${weekday}</div>
+            <div class="day-header">
+              <div class="day">${weekday}</div>
+              <div class="date">${monthDay}</div>
+            </div>
             <img src="${icon}" alt="${day.weather[0].description}" />
             <div class="temps">${tempMax}° / ${tempMin}°</div>
-            <div class="pop">🌧️ ${pop}%</div>
+            <div class="pop">💧 ${pop}%</div>
+            <div class="description">${day.weather[0].description}</div>
           </div>
         `;
       }).join("");
 
-      document.getElementById("five-day-forecast").innerHTML = forecastHTML;
+      document.getElementById("ten-day-forecast").innerHTML = forecastHTML;
     })
     .catch((e) => {
-      console.error("5-day forecast error!", e);
+      console.error("Fallback forecast error!", e);
     });
 }
 
@@ -331,7 +376,7 @@ function degToCompass(num) {
 getLatitudeAndLongitude()
   .then(() => {
     getCurrentWeather();
-    getFiveDayForecast();
+    getTenDayForecast();
     getHourlyForecast();
   })
   .catch((error) => {
