@@ -42,15 +42,61 @@ searchBox.addEventListener("input", async function () {
     try {
       const { hits } = await index.search(query, { hitsPerPage: 5 });
 
-      resultsContainer.innerHTML = hits
-        .map(hit => `<div class="search-result" onclick="fetchWeather('${hit.name}', ${hit._geoloc.lat}, ${hit._geoloc.lng})">${hit.name}, ${hit.state}</div>`)
-        .join("");
+      if (hits && hits.length > 0) {
+        resultsContainer.innerHTML = hits
+          .map(hit => `<div class="search-result" onclick="fetchWeather('${hit.name}', ${hit._geoloc.lat}, ${hit._geoloc.lng})">${hit.name}, ${hit.state}</div>`)
+          .join("");
+      } else {
+        resultsContainer.innerHTML = '<div class="search-result">No cities found</div>';
+      }
 
     } catch (error) {
       console.error("Algolia search error:", error);
+      resultsContainer.innerHTML = '<div class="search-result">Error searching cities</div>';
     }
   }
 });
+
+// Use My Location button
+const myLocationBtn = document.getElementById("my-location");
+if (myLocationBtn) {
+  myLocationBtn.addEventListener("click", function() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+
+          // Get city name from coordinates using reverse geocoding
+          fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${userLat}&lon=${userLon}&limit=1&appid=${openWeatherApiKey}`)
+            .then(response => response.json())
+            .then(data => {
+              if (data && data.length > 0) {
+                const cityName = data[0].name;
+                fetchWeather(cityName, userLat, userLon);
+              }
+            })
+            .catch(error => {
+              console.error("Error getting city name:", error);
+              // Still fetch weather even if we can't get the city name
+              lat = userLat;
+              lon = userLon;
+              getCurrentWeather();
+              getTenDayForecast();
+              getHourlyForecast();
+              updateWeatherCards(lat, lon);
+            });
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          alert("Unable to get your location. Please enable location services.");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  });
+}
 
 // Fetch OpenWeather Data when city is selected
 async function fetchWeather(city, latValue, lonValue) {
@@ -126,8 +172,8 @@ function getTenDayForecast() {
     .then((res) => {
       const dailyData = res.data.daily;
 
-      // Take up to 10 days (API provides 7-8 days typically)
-      const forecastHTML = dailyData.slice(1, 11).map((day, index) => {
+      // Take up to 5 days
+      const forecastHTML = dailyData.slice(1, 6).map((day, index) => {
         const date = new Date(day.dt * 1000);
         const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
         const monthDay = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -401,6 +447,7 @@ getLatitudeAndLongitude()
     getCurrentWeather();
     getTenDayForecast();
     getHourlyForecast();
+    updateWeatherCards(lat, lon);
   })
   .catch((error) => {
     console.error('Error getting latitude:', error);
