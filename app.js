@@ -372,6 +372,125 @@ function degToCompass(num) {
   return arr[val % 16];
 }
 
+// Geolocation functionality
+const myLocationBtn = document.getElementById('my-location');
+
+myLocationBtn.addEventListener('click', () => {
+  getUserLocation();
+});
+
+function getUserLocation() {
+  // Check if geolocation is supported
+  if (!navigator.geolocation) {
+    alert('Geolocation is not supported by your browser. Please search for a city manually.');
+    return;
+  }
+
+  // Show loading state
+  myLocationBtn.disabled = true;
+  myLocationBtn.innerHTML = '<i class="ph ph-spinner"></i> Getting location...';
+
+  navigator.geolocation.getCurrentPosition(
+    // Success callback
+    async (position) => {
+      const { latitude, longitude } = position.coords;
+      lat = latitude;
+      lon = longitude;
+
+      try {
+        // Reverse geocode to get city name
+        const cityName = await getCityNameFromCoords(latitude, longitude);
+
+        // Update search box with city name
+        searchBox.value = cityName;
+
+        // Fetch weather for the location
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${openWeatherApiKey}&units=imperial`;
+        const response = await fetch(url);
+
+        if (!response.ok) throw new Error('Weather fetch failed');
+
+        const data = await response.json();
+
+        document.getElementById("city-temp").innerHTML = `
+          <h1>${data.name}</h1>
+          <h2>${Math.round(data.main.temp)}°<span style="font-size: 0.5em; vertical-align: super;">F</span>, ${data.weather[0].description}</h2>
+        `;
+
+        // Cache the response
+        localStorage.setItem('lastWeather', JSON.stringify(data));
+
+        // Fetch forecast data
+        getTenDayForecast();
+        getHourlyForecast();
+        updateWeatherCards(lat, lon);
+
+        // Reset button state
+        myLocationBtn.disabled = false;
+        myLocationBtn.innerHTML = '<i class="ph ph-navigation-arrow"></i> Use my location';
+
+      } catch (error) {
+        console.error('Error fetching location weather:', error);
+        alert('Unable to fetch weather for your location. Please try again.');
+        myLocationBtn.disabled = false;
+        myLocationBtn.innerHTML = '<i class="ph ph-navigation-arrow"></i> Use my location';
+      }
+    },
+    // Error callback
+    (error) => {
+      let errorMessage = 'Unable to get your location. ';
+
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage += 'You denied location access. Please enable location permissions in your browser settings.';
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage += 'Location information is unavailable.';
+          break;
+        case error.TIMEOUT:
+          errorMessage += 'Location request timed out.';
+          break;
+        default:
+          errorMessage += 'An unknown error occurred.';
+      }
+
+      alert(errorMessage);
+      console.error('Geolocation error:', error);
+
+      // Reset button state
+      myLocationBtn.disabled = false;
+      myLocationBtn.innerHTML = '<i class="ph ph-navigation-arrow"></i> Use my location';
+    },
+    // Options
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
+}
+
+// Reverse geocode to get city name from coordinates
+async function getCityNameFromCoords(latitude, longitude) {
+  try {
+    const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${openWeatherApiKey}`;
+    const response = await fetch(url);
+
+    if (!response.ok) throw new Error('Reverse geocoding failed');
+
+    const data = await response.json();
+
+    if (data.length > 0) {
+      return data[0].name;
+    } else {
+      return 'Unknown Location';
+    }
+  } catch (error) {
+    console.error('Reverse geocoding error:', error);
+    return 'Unknown Location';
+  }
+}
+
 // Usage example:
 getLatitudeAndLongitude()
   .then(() => {
