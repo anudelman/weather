@@ -372,6 +372,65 @@ function degToCompass(num) {
   return arr[val % 16];
 }
 
+// Add event listener for "Use my location" button
+document.getElementById('my-location').addEventListener('click', function() {
+  if (navigator.geolocation) {
+    // Show loading state
+    const button = this;
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i class="ph ph-spinner"></i> Getting location...';
+    button.disabled = true;
+
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        // Success - got user's location
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+
+        // Update global lat/lon
+        lat = userLat;
+        lon = userLon;
+
+        // Fetch location name using reverse geocoding
+        axios.get(`https://api.openweathermap.org/geo/1.0/reverse?lat=${userLat}&lon=${userLon}&limit=1&appid=${openWeatherApiKey}`)
+          .then((response) => {
+            if (response.data && response.data.length > 0) {
+              const locationData = response.data[0];
+              const cityName = locationData.name;
+              const stateName = locationData.state || '';
+
+              // Update search box
+              searchBox.value = stateName ? `${cityName}, ${stateName}` : cityName;
+
+              // Fetch weather for this location
+              fetchWeather(cityName, userLat, userLon);
+            }
+
+            // Restore button
+            button.innerHTML = originalContent;
+            button.disabled = false;
+          })
+          .catch((error) => {
+            console.error('Error getting location name:', error);
+            // Still fetch weather even if reverse geocoding fails
+            fetchWeather('Current Location', userLat, userLon);
+            button.innerHTML = originalContent;
+            button.disabled = false;
+          });
+      },
+      function(error) {
+        // Error getting location
+        console.error('Geolocation error:', error);
+        alert('Unable to get your location. Please make sure location services are enabled.');
+        button.innerHTML = originalContent;
+        button.disabled = false;
+      }
+    );
+  } else {
+    alert('Geolocation is not supported by your browser.');
+  }
+});
+
 // Usage example:
 getLatitudeAndLongitude()
   .then(() => {
