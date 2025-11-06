@@ -187,12 +187,12 @@ section#city-temp{
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   color: var(--color-text-primary);
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast), opacity var(--transition-fast);
 }
 
 /* Hover state */
-.text-button:hover,
-.text-button:focus {
+.text-button:hover:not(:disabled),
+.text-button:focus:not(:disabled) {
   background: var(--color-border);
   outline: none;
 }
@@ -201,6 +201,27 @@ section#city-temp{
 .text-button.selected {
   background: var(--color-primary);
   color: var(--color-text-inverted);
+}
+
+/* Disabled state */
+.text-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Spinner animation for loading state */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ph-spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
 }
 
 .forecast-section {
