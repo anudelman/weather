@@ -103,8 +103,8 @@ function getTenDayForecast() {
     .then((res) => {
       const dailyData = res.data.daily;
 
-      // Take up to 10 days (API provides 7-8 days typically)
-      const forecastHTML = dailyData.slice(1, 11).map((day, index) => {
+      // Take up to 5 days
+      const forecastHTML = dailyData.slice(1, 6).map((day, index) => {
         const date = new Date(day.dt * 1000);
         const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
         const monthDay = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
