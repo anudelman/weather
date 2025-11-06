@@ -15,7 +15,6 @@ html, body {
 
 body{
   padding: var(--spacing-2xl) var(--spacing-3xl);
-  background: linear-gradient(var(--color-background-secondary), var(--color-background-tertiary));
 }
 
 /* Make sure the content appears on top */
@@ -65,7 +64,9 @@ img{
     align-items: stretch;
     gap: var(--spacing-md);
     top: 12px;
-    padding: var(--spacing-sm);
+    margin: calc(var(--spacing-lg) * -1) calc(var(--spacing-lg) * -1) var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border: none;
   }
 
   img {
