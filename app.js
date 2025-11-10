@@ -54,7 +54,7 @@ async function fetchWeather(city, latValue, lonValue) {
     searchBox.value = city; // Fill input with selected city
     
     // Fetch forecast data after updating current weather
-    getTenDayForecast();
+    getFiveDayForecast();
     getHourlyForecast();
     updateWeatherCards(lat, lon);
 
@@ -92,7 +92,7 @@ function getLatitudeAndLongitude() {
     });
 }
 
-function getTenDayForecast() {
+function getFiveDayForecast() {
   if (!lat || !lon) {
     console.error('Latitude or Longitude is not available.');
     return;
@@ -103,8 +103,8 @@ function getTenDayForecast() {
     .then((res) => {
       const dailyData = res.data.daily;
 
-      // Take up to 10 days (API provides 7-8 days typically)
-      const forecastHTML = dailyData.slice(1, 11).map((day, index) => {
+      // Take up to 5 days following the current day
+      const forecastHTML = dailyData.slice(1, 6).map((day, index) => {
         const date = new Date(day.dt * 1000);
         const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
         const monthDay = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -127,10 +127,10 @@ function getTenDayForecast() {
         `;
       }).join("");
 
-      document.getElementById("ten-day-forecast").innerHTML = forecastHTML;
+      document.getElementById("five-day-forecast").innerHTML = forecastHTML;
     })
     .catch((e) => {
-      console.error("10-day forecast error!", e);
+      console.error("5-day forecast error!", e);
       // Fallback to 5-day forecast API if One Call fails
       getFallbackFiveDayForecast();
     });
@@ -172,7 +172,7 @@ function getFallbackFiveDayForecast() {
         `;
       }).join("");
 
-      document.getElementById("ten-day-forecast").innerHTML = forecastHTML;
+      document.getElementById("five-day-forecast").innerHTML = forecastHTML;
     })
     .catch((e) => {
       console.error("Fallback forecast error!", e);
@@ -376,7 +376,7 @@ function degToCompass(num) {
 getLatitudeAndLongitude()
   .then(() => {
     getCurrentWeather();
-    getTenDayForecast();
+    getFiveDayForecast();
     getHourlyForecast();
   })
   .catch((error) => {
