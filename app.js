@@ -2,38 +2,140 @@ const openWeatherApiKey = '90feb339669a5a15ccbb64314564e9dd';
 const city = document.querySelector('#city-temp h1');
 const currentTemp = document.querySelector('#city-temp h2');
 
-// Initialize Algolia
-const searchClient = algoliasearch("90OQHOCLYE", "7d2ae762429c13a838c5c84b8055d485");
-const index = searchClient.initIndex("us_cities"); // Replace with your index name
-
 const searchBox = document.getElementById("searchbox");
 const resultsContainer = document.getElementById("autocomplete-results");
+const MIN_QUERY_LENGTH = 3;
 
-// Listen for input and fetch search results
-searchBox.addEventListener("input", async function () {
-  let query = searchBox.value.trim();
-  if (query.length < 2) {
-    resultsContainer.innerHTML = ""; // Clear results if query is too short
-    return;
-  }
+let locationIndex = [];
 
-  try {
-    const { hits } = await index.search(query, { hitsPerPage: 5 });
+fetch('us_cities.json')
+  .then((response) => response.json())
+  .then((data) => {
+    locationIndex = data;
+  })
+  .catch((error) => {
+    console.error('Error loading location index:', error);
+  });
 
-    resultsContainer.innerHTML = hits
-      .map(hit => `<div class="search-result" onclick="fetchWeather('${hit.name}', ${hit._geoloc.lat}, ${hit._geoloc.lng})">${hit.name}, ${hit.state}</div>`)
-      .join("");
-
-  } catch (error) {
-    console.error("Algolia search error:", error);
+searchBox.addEventListener('input', handleSearchInput);
+searchBox.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    const firstResult = resultsContainer.querySelector('.search-result');
+    if (firstResult instanceof HTMLButtonElement) {
+      firstResult.click();
+    }
   }
 });
 
-// Fetch OpenWeather Data when city is selected
-async function fetchWeather(city, latValue, lonValue) {
+searchBox.addEventListener('focus', () => {
+  if (searchBox.value.trim().length >= MIN_QUERY_LENGTH) {
+    handleSearchInput();
+  }
+});
+
+searchBox.addEventListener('blur', () => {
+  setTimeout(() => {
+    clearResults();
+  }, 150);
+});
+
+resultsContainer.addEventListener('click', (event) => {
+  const target = event.target.closest('.search-result');
+  if (!target || !(target instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  const selectedLocation = {
+    name: target.dataset.name,
+    state: target.dataset.state,
+    zip: target.dataset.zip,
+    lat: parseFloat(target.dataset.lat),
+    lon: parseFloat(target.dataset.lon),
+  };
+
+  fetchWeather(selectedLocation);
+});
+
+function handleSearchInput() {
+  const query = searchBox.value.trim();
+
+  if (query.length < MIN_QUERY_LENGTH || !locationIndex.length) {
+    clearResults();
+    return;
+  }
+
+  const isNumericQuery = /^[0-9]+$/.test(query);
+  const normalizedQuery = query.toLowerCase();
+
+  const matches = locationIndex
+    .filter((location) => {
+      if (isNumericQuery) {
+        return location.zip && location.zip.startsWith(query);
+      }
+
+      const cityState = `${location.name}, ${location.state}`.toLowerCase();
+      return (
+        location.name.toLowerCase().includes(normalizedQuery) ||
+        cityState.includes(normalizedQuery)
+      );
+    })
+    .slice(0, 5);
+
+  renderSearchResults(matches);
+}
+
+function renderSearchResults(matches) {
+  resultsContainer.innerHTML = '';
+
+  if (!matches.length) {
+    const emptyMessage = document.createElement('div');
+    emptyMessage.className = 'search-result';
+    emptyMessage.textContent = 'No matches found';
+    emptyMessage.setAttribute('aria-disabled', 'true');
+    emptyMessage.setAttribute('role', 'option');
+    emptyMessage.tabIndex = -1;
+    resultsContainer.appendChild(emptyMessage);
+    resultsContainer.classList.add('active');
+    searchBox.setAttribute('aria-expanded', 'true');
+    return;
+  }
+
+  const fragment = document.createDocumentFragment();
+
+  matches.forEach((location) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'search-result';
+    button.dataset.name = location.name;
+    button.dataset.state = location.state;
+    button.dataset.zip = location.zip || '';
+    button.dataset.lat = location._geoloc.lat;
+    button.dataset.lon = location._geoloc.lng;
+    button.setAttribute('role', 'option');
+    button.textContent = `${location.name}, ${location.state}${location.zip ? ` ${location.zip}` : ''}`;
+    fragment.appendChild(button);
+  });
+
+  resultsContainer.appendChild(fragment);
+  resultsContainer.classList.add('active');
+  searchBox.setAttribute('aria-expanded', 'true');
+}
+
+function clearResults() {
+  resultsContainer.innerHTML = '';
+  resultsContainer.classList.remove('active');
+  searchBox.setAttribute('aria-expanded', 'false');
+}
+
+// Fetch OpenWeather Data when a location is selected
+async function fetchWeather(location) {
+  const { name, state, zip, lat: latValue, lon: lonValue } = location;
   lat = latValue;
   lon = lonValue;
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},US&appid=${openWeatherApiKey}&units=imperial`;
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latValue}&lon=${lonValue}&appid=${openWeatherApiKey}&units=imperial`;
+  const displayName = `${name}, ${state}${zip ? ` ${zip}` : ''}`;
+  searchBox.value = displayName;
+  clearResults();
 
   try {
     const response = await fetch(url);
@@ -42,37 +144,29 @@ async function fetchWeather(city, latValue, lonValue) {
 
     const data = await response.json();
 
-    document.getElementById("city-temp").innerHTML = `
-      <h1>${data.name}</h1>
-      <h2>${Math.round(data.main.temp)}°<span style="font-size: 0.5em; vertical-align: super;">F</span>, ${data.weather[0].description}</h2>
-    `;
+    city.textContent = displayName;
+    currentTemp.innerHTML = `${Math.round(data.main.temp)}°<span style="font-size: 0.5em; vertical-align: super;">F</span>, ${data.weather[0].description}`;
 
-    // Cache the response
-    localStorage.setItem('lastWeather', JSON.stringify(data));
+    // Cache the response with display name for offline fallbacks
+    localStorage.setItem('lastWeather', JSON.stringify({ ...data, displayName }));
 
-    resultsContainer.innerHTML = ""; // Clear search results after selection
-    searchBox.value = city; // Fill input with selected city
-    
     // Fetch forecast data after updating current weather
     getTenDayForecast();
     getHourlyForecast();
     updateWeatherCards(lat, lon);
 
   } catch (error) {
-    console.error("Weather fetch error:", error);
+    console.error('Weather fetch error:', error);
 
     const cached = localStorage.getItem('lastWeather');
     if (cached) {
       const data = JSON.parse(cached);
-      document.getElementById("city-temp").innerHTML = `
-        <h1>${data.name}</h1>
-        <h2>${Math.round(data.main.temp)}°<span style="font-size: 0.5em; vertical-align: super;">F</span> (cached), ${data.weather[0].description}</h2>
-      `;
+      const cachedName = data.displayName || `${data.name}`;
+      city.textContent = cachedName;
+      currentTemp.innerHTML = `${Math.round(data.main.temp)}°<span style="font-size: 0.5em; vertical-align: super;">F</span> (cached), ${data.weather[0].description}`;
     } else {
-      document.getElementById("city-temp").innerHTML = `
-        <h1>${city}</h1>
-        <h2>Unable to fetch weather data. Please check your connection.</h2>
-      `;
+      city.textContent = displayName;
+      currentTemp.textContent = 'Unable to fetch weather data. Please check your connection.';
     }
   }
 }
