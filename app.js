@@ -1,6 +1,4 @@
 const openWeatherApiKey = '90feb339669a5a15ccbb64314564e9dd';
-const city = document.querySelector('#city-temp h1');
-const currentTemp = document.querySelector('#city-temp h2');
 
 // Initialize Algolia
 const searchClient = algoliasearch("90OQHOCLYE", "7d2ae762429c13a838c5c84b8055d485");
@@ -33,7 +31,19 @@ searchBox.addEventListener("input", async function () {
 async function fetchWeather(city, latValue, lonValue) {
   lat = latValue;
   lon = lonValue;
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},US&appid=${openWeatherApiKey}&units=imperial`;
+  await updateWeatherByLocation(latValue, lonValue, { label: city });
+  resultsContainer.innerHTML = ""; // Clear search results after selection
+}
+
+// Declare lat in a higher scope
+let lat;
+let lon;
+
+async function updateWeatherByLocation(latitude, longitude, { label, updateSearchInput = true } = {}) {
+  lat = latitude;
+  lon = longitude;
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${openWeatherApiKey}&units=imperial`;
 
   try {
     const response = await fetch(url);
@@ -42,53 +52,73 @@ async function fetchWeather(city, latValue, lonValue) {
 
     const data = await response.json();
 
+    const displayName = data.name || label || 'Selected Location';
+
     document.getElementById("city-temp").innerHTML = `
-      <h1>${data.name}</h1>
+      <h1>${displayName}</h1>
       <h2>${Math.round(data.main.temp)}°<span style="font-size: 0.5em; vertical-align: super;">F</span>, ${data.weather[0].description}</h2>
     `;
 
     // Cache the response
     localStorage.setItem('lastWeather', JSON.stringify(data));
 
-    resultsContainer.innerHTML = ""; // Clear search results after selection
-    searchBox.value = city; // Fill input with selected city
-    
+    if (updateSearchInput) {
+      const inputValue = label || displayName;
+      searchBox.value = inputValue;
+    }
+
+    resultsContainer.innerHTML = "";
+
     // Fetch forecast data after updating current weather
     getTenDayForecast();
     getHourlyForecast();
     updateWeatherCards(lat, lon);
 
+    return true;
   } catch (error) {
     console.error("Weather fetch error:", error);
 
     const cached = localStorage.getItem('lastWeather');
     if (cached) {
       const data = JSON.parse(cached);
+      const cachedName = data.name || label || 'Selected Location';
       document.getElementById("city-temp").innerHTML = `
-        <h1>${data.name}</h1>
+        <h1>${cachedName}</h1>
         <h2>${Math.round(data.main.temp)}°<span style="font-size: 0.5em; vertical-align: super;">F</span> (cached), ${data.weather[0].description}</h2>
       `;
-    } else {
-      document.getElementById("city-temp").innerHTML = `
-        <h1>${city}</h1>
-        <h2>Unable to fetch weather data. Please check your connection.</h2>
-      `;
+      return false;
     }
+
+    const fallbackName = label || 'your location';
+    document.getElementById("city-temp").innerHTML = `
+      <h1>${fallbackName}</h1>
+      <h2>Unable to fetch weather data. Please check your connection.</h2>
+    `;
+
+    return false;
   }
 }
 
-// Declare lat in a higher scope
-let lat;
-let lon;
+async function fetchWeatherByCoordinates(latitude, longitude, options = {}) {
+  return updateWeatherByLocation(latitude, longitude, options);
+}
 
 // Function to make the first API call and get latitude
-function getLatitudeAndLongitude() {
-  return axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=Deerfield,IL,US&limit=80&appid=${openWeatherApiKey}`)
+function getLatitudeAndLongitude(city = 'Deerfield', state = 'IL') {
+  return axios.get(`https://api.openweathermap.org/geo/1.0/direct?q=${city},${state},US&limit=1&appid=${openWeatherApiKey}`)
     .then((response) => {
       const locationData = response.data;
+      if (!Array.isArray(locationData) || locationData.length === 0) {
+        throw new Error('Location not found');
+      }
+
       lat = locationData[0].lat; // Store lat globally
       lon = locationData[0].lon;
-      return `${lat} ${lon}`; // Return lat and lon for future use
+      return {
+        lat,
+        lon,
+        label: `${locationData[0].name}${locationData[0].state ? `, ${locationData[0].state}` : ''}`
+      };
     });
 }
 
@@ -209,104 +239,6 @@ function getHourlyForecast() {
 }
 
 // Function to make the second API call using lat
-function getCurrentWeather() {
-  if (!lat && !lon) {
-    console.error('Latitude or Longitude is not available.');
-    return;
-  }
-
-  // Make the second API call using lat and lon
-  axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${openWeatherApiKey}`)
-    .then((response) => {
-      const weatherData = response.data;
-
-       // Accessing country code
-    const countryCode = weatherData.sys.country;
-
-
-    // Map country codes to state abbreviations (customize this mapping as needed)
-    const countryToState = {
-        US: {
-          AL: 'AL',
-          AK: 'AK',
-          AZ: 'AZ',
-          AR: 'AR',
-          CA: 'CA',
-          CO: 'CO',
-          CT: 'CT',
-          DE: 'DE',
-          FL: 'FL',
-          GA: 'GA',
-          HI: 'HI',
-          ID: 'ID',
-          IL: 'IL',
-          IN: 'IN',
-          IA: 'IA',
-          KS: 'KS',
-          KY: 'KY',
-          LA: 'LA',
-          ME: 'ME',
-          MD: 'MD',
-          MA: 'MA',
-          MI: 'MI',
-          MN: 'MN',
-          MS: 'MS',
-          MO: 'MO',
-          MT: 'MT',
-          NE: 'NE',
-          NV: 'NV',
-          NH: 'NH',
-          NJ: 'NJ',
-          NM: 'NM',
-          NY: 'NY',
-          NC: 'NC',
-          ND: 'ND',
-          OH: 'OH',
-          OK: 'OK',
-          OR: 'OR',
-          PA: 'PA',
-          RI: 'RI',
-          SC: 'SC',
-          SD: 'SD',
-          TN: 'TN',
-          TX: 'TX',
-          UT: 'UT',
-          VT: 'VT',
-          VA: 'VA',
-          WA: 'WA',
-          WV: 'WV',
-          WI: 'WI',
-          WY: 'WY',
-          // Add more states as needed
-        },
-        // Add more countries if required
-      };
-      
-
-    // Get the state abbreviation based on the country code. "IL" is hard coded and will eventually need to be a val captured by user input.
-    const state = countryToState[countryCode].IL || 'N/A'; // Default to 'N/A' if not found
-
-      
-      console.log('Weather Data:', weatherData);
-      
-
-       // Convert temperature from Celsius to Fahrenheit
-       const temperatureCelsius = weatherData.main.temp;
-       const temperatureFahrenheit = (temperatureCelsius * 9/5) + 32;
-       
-    //    console.log('Weather Data:');
-    //    console.log('Temperature (°C):', temperatureCelsius);
-    //    console.log('Temperature (°F):', temperatureFahrenheit);
-       
-       city.textContent = `${weatherData.name}, ${state}`;
-       currentTemp.innerHTML = `${Math.round(temperatureFahrenheit)}°<span style="font-size: 0.5em; vertical-align: super;">F</span>`
-
-    })
-    .catch((error) => {
-      console.error('Error fetching weather data:', error);
-    });
-}
-
 // New function to update the weather cards with live data
 async function updateWeatherCards(lat, lon) {
   try {
@@ -372,13 +304,48 @@ function degToCompass(num) {
   return arr[val % 16];
 }
 
-// Usage example:
-getLatitudeAndLongitude()
-  .then(() => {
-    getCurrentWeather();
-    getTenDayForecast();
-    getHourlyForecast();
-  })
-  .catch((error) => {
-    console.error('Error getting latitude:', error);
+async function initializeDefaultWeather() {
+  try {
+    const { lat: defaultLat, lon: defaultLon, label } = await getLatitudeAndLongitude();
+    await updateWeatherByLocation(defaultLat, defaultLon, { label });
+  } catch (error) {
+    console.error('Error getting default location:', error);
+  }
+}
+
+async function requestUserLocation() {
+  if (!('geolocation' in navigator)) {
+    console.warn('Geolocation is not supported by this browser.');
+    return false;
+  }
+
+  return new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const success = await fetchWeatherByCoordinates(position.coords.latitude, position.coords.longitude);
+          resolve(success);
+        } catch (error) {
+          console.error('Error fetching weather for current location:', error);
+          resolve(false);
+        }
+      },
+      (error) => {
+        console.warn('Geolocation error:', error);
+        resolve(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 5 * 60 * 1000,
+      }
+    );
   });
+}
+
+window.addEventListener('load', async () => {
+  const usedGeolocation = await requestUserLocation();
+  if (!usedGeolocation) {
+    await initializeDefaultWeather();
+  }
+});
