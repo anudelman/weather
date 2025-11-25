@@ -20,13 +20,15 @@
   <body>
     <nav>
       <img src="./assets/Logo.png" id="logo" alt="Weather App Logo" />
-      <input
-        type="text"
-        id="searchbox"
-        placeholder="Search for a city..."
-        autocomplete="off"
-      />
-      <div id="autocomplete-results"></div>
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchbox"
+          placeholder="Search for a city..."
+          autocomplete="off"
+        />
+        <div id="autocomplete-results"></div>
+      </div>
       <div class="nav-buttons">
         <button id="my-location" class="text-button"><i class="ph ph-navigation-arrow"></i> Use my location</button>
         <button id="map-view" class="text-button"><i class="ph ph-map-trifold"></i> Map view</button>
