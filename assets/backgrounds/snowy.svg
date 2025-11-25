@@ -1,0 +1,28 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="snowSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A3A5C" />
+      <stop offset="100%" stop-color="#0D1B3D" />
+    </linearGradient>
+    <radialGradient id="snowGlow" cx="0.4" cy="0.2" r="0.4">
+      <stop offset="0%" stop-color="#E0F2FE" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#E0F2FE" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1440" height="900" fill="url(#snowSky)" />
+  <rect width="1440" height="900" fill="url(#snowGlow)" />
+  <g fill="white" fill-opacity="0.65">
+    <circle cx="200" cy="260" r="3" />
+    <circle cx="320" cy="280" r="4" />
+    <circle cx="480" cy="240" r="3" />
+    <circle cx="640" cy="220" r="4" />
+    <circle cx="820" cy="250" r="3" />
+    <circle cx="980" cy="230" r="4" />
+    <circle cx="1140" cy="260" r="3" />
+  </g>
+  <ellipse cx="440" cy="360" rx="320" ry="140" fill="#F8FAFC" fill-opacity="0.35" />
+  <ellipse cx="800" cy="320" rx="360" ry="160" fill="#E2E8F0" fill-opacity="0.35" />
+  <ellipse cx="1180" cy="360" rx="300" ry="140" fill="#E5E7EB" fill-opacity="0.3" />
+  <circle cx="220" cy="820" r="460" fill="#0D1732" fill-opacity="0.55" />
+  <circle cx="1220" cy="820" r="520" fill="#0A122A" fill-opacity="0.55" />
+</svg>
