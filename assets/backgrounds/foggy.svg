@@ -1,0 +1,17 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fogSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A304A" />
+      <stop offset="100%" stop-color="#0C1226" />
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="900" fill="url(#fogSky)" />
+  <g opacity="0.35" fill="#E5E7EB">
+    <rect x="0" y="240" width="1440" height="36" rx="18" />
+    <rect x="80" y="320" width="1360" height="36" rx="18" />
+    <rect x="40" y="400" width="1400" height="36" rx="18" />
+    <rect x="120" y="480" width="1320" height="36" rx="18" />
+  </g>
+  <circle cx="240" cy="820" r="460" fill="#0B1024" fill-opacity="0.6" />
+  <circle cx="1220" cy="820" r="520" fill="#080C1A" fill-opacity="0.6" />
+</svg>

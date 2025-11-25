@@ -1,0 +1,29 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="rainSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2B304F" />
+      <stop offset="100%" stop-color="#0B1028" />
+    </linearGradient>
+    <linearGradient id="rainLine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7DD3FC" stop-opacity="0.65" />
+      <stop offset="100%" stop-color="#60A5FA" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="900" fill="url(#rainSky)" />
+  <ellipse cx="420" cy="360" rx="320" ry="140" fill="#C7CEDF" fill-opacity="0.25" />
+  <ellipse cx="760" cy="320" rx="360" ry="160" fill="#D1D5DB" fill-opacity="0.28" />
+  <ellipse cx="1160" cy="360" rx="300" ry="140" fill="#BFC8DA" fill-opacity="0.22" />
+  <g stroke="url(#rainLine)" stroke-width="3" stroke-linecap="round">
+    <line x1="180" y1="520" x2="160" y2="600" />
+    <line x1="260" y1="520" x2="240" y2="600" />
+    <line x1="340" y1="520" x2="320" y2="600" />
+    <line x1="520" y1="520" x2="500" y2="600" />
+    <line x1="600" y1="520" x2="580" y2="600" />
+    <line x1="900" y1="520" x2="880" y2="600" />
+    <line x1="980" y1="520" x2="960" y2="600" />
+    <line x1="1100" y1="520" x2="1080" y2="600" />
+    <line x1="1220" y1="520" x2="1200" y2="600" />
+  </g>
+  <circle cx="220" cy="820" r="460" fill="#0F142F" fill-opacity="0.6" />
+  <circle cx="1220" cy="820" r="520" fill="#0A0E24" fill-opacity="0.55" />
+</svg>
